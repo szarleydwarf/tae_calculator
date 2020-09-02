@@ -29,52 +29,58 @@ class ViewController: UIViewController {
     checkup is necessary for default text clears the default text first time round
     */
     @IBAction func getAndDisplayNumber(_ sender: UIButton) {
-        if displayLabel.text == defaultLabelText {
-            displayLabel.text = ""
+        guard var unwrapedDisplayLabelText = displayLabel.text else { return }
+
+        if unwrapedDisplayLabelText == defaultLabelText {
+            unwrapedDisplayLabelText = ""
         }
+        
         if calculating {
-            displayLabel.text = String(sender.tag)
-            displayedNumber = Float(displayLabel.text!)!
+            unwrapedDisplayLabelText = String(sender.tag)
+            displayedNumber = Float(unwrapedDisplayLabelText)!
             calculating = false
         } else {
             var symbol = ""
             if sender.tag == comaSignTag {
-               if displayLabel.text!.isEmpty {
+               if unwrapedDisplayLabelText.isEmpty {
                     symbol = "0."
-                } else if  (displayLabel.text?.contains(String(comaSign)))!{
+               } else if  (unwrapedDisplayLabelText.contains(String(comaSign))){
                     symbol=""
-                } else if !(displayLabel.text?.contains(String(comaSign)))!{
+               } else if !(unwrapedDisplayLabelText.contains(String(comaSign))){
                     symbol = "."
                }
             } else {
                 symbol = String(sender.tag)
             }
                 
-            displayLabel.text = displayLabel.text! + symbol
-            displayedNumber = Float(displayLabel.text!)!
+            unwrapedDisplayLabelText = unwrapedDisplayLabelText + symbol
+            displayedNumber = Float(unwrapedDisplayLabelText)!
         }
+        displayLabel.text = unwrapedDisplayLabelText
     }
     
     /*
      func to do calculation or clear screen
      */
     @IBAction func calculateOrClear(_ sender: UIButton) {
-        var tag = sender.tag
+        let tag = sender.tag
+
+        guard var unwrapedDisplayLabelText = displayLabel.text else { return }
  
-        if !displayLabel.text!.isEmpty && tag != clearTag && tag != equalsTag && tag != signChangeTag{
+        if !unwrapedDisplayLabelText.isEmpty && tag != clearTag && tag != equalsTag && tag != signChangeTag{
 //            numberBeforeLast = lastNumber
-            lastNumber = Float(displayLabel.text!)!
+            lastNumber = Float(unwrapedDisplayLabelText)!
             switch tag {
             case plusTag:
-                displayLabel.text = plusSign
+                unwrapedDisplayLabelText = plusSign
             case minusTag:
-                displayLabel.text = minusSign
+                unwrapedDisplayLabelText = minusSign
             case multiplyTag:
-                displayLabel.text = multiplySign
+                unwrapedDisplayLabelText = multiplySign
             case divideTag:
-                displayLabel.text = divisionSign
+                unwrapedDisplayLabelText = divisionSign
             case percentTag:
-                displayLabel.text = percentSign
+                unwrapedDisplayLabelText = percentSign
             default:
                 return
             }
@@ -85,15 +91,15 @@ class ViewController: UIViewController {
         if tag == equalsTag {
             switch operationSymbol {
             case plusTag:
-                displayLabel.text = String(lastNumber+displayedNumber)
+                unwrapedDisplayLabelText = String(lastNumber+displayedNumber)
             case minusTag:
-                displayLabel.text = String(lastNumber-displayedNumber)
+                unwrapedDisplayLabelText = String(lastNumber-displayedNumber)
             case multiplyTag:
-                displayLabel.text = String(lastNumber*displayedNumber)
+                unwrapedDisplayLabelText = String(lastNumber*displayedNumber)
             case divideTag:
-                displayLabel.text = String(lastNumber/displayedNumber)
+                unwrapedDisplayLabelText = String(lastNumber/displayedNumber)
             case percentTag:
-                displayLabel.text = String(lastNumber * (displayedNumber / 100))+percentSign
+                unwrapedDisplayLabelText = String(lastNumber * (displayedNumber / 100))+percentSign
             default:
                 return
             }
@@ -105,20 +111,22 @@ class ViewController: UIViewController {
 //        }
         
         if tag == clearTag {
-            displayLabel.text = defaultLabelText
+            unwrapedDisplayLabelText = defaultLabelText
             lastNumber = 0.0
             displayedNumber = 0.0
             operationSymbol = 0
         }
 
-        if tag == signChangeTag && displayLabel.text! != defaultLabelText{
-            if !displayLabel.text!.contains(minusSign) {
-                displayLabel.text = minusSign + displayLabel.text!
+        if tag == signChangeTag && unwrapedDisplayLabelText != defaultLabelText{
+            if !unwrapedDisplayLabelText.contains(minusSign) {
+                unwrapedDisplayLabelText = minusSign + unwrapedDisplayLabelText
             } else {
-                displayLabel.text = displayLabel.text!.replacingOccurrences(of: minusSign, with: "")
+                unwrapedDisplayLabelText = unwrapedDisplayLabelText.replacingOccurrences(of: minusSign, with: "")
 
             }
         }
+        
+        displayLabel.text = unwrapedDisplayLabelText
     }
     
     override func viewDidLoad() {
