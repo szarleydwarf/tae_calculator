@@ -99,16 +99,11 @@ class ViewController: UIViewController {
             case divideTag:
                 unwrapedDisplayLabelText = String(lastNumber/displayedNumber)
             case percentTag:
-                unwrapedDisplayLabelText = String(lastNumber * (displayedNumber / 100))+percentSign
+                unwrapedDisplayLabelText = String(displayedNumber / 100)+percentSign
             default:
                 return
             }
         }
-        
-//        if tag == percentTag {
-//            displayLabel.text = String(numberBeforeLast * (lastNumber / 100))+percentSign
-//            print("percentage \(numberBeforeLast) * \(lastNumber/100) \(lastNumber) \(operationSymbol)")
-//        }
         
         if tag == clearTag {
             unwrapedDisplayLabelText = defaultLabelText
